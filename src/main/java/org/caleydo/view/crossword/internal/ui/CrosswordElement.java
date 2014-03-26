@@ -9,6 +9,7 @@ import static org.caleydo.core.view.opengl.layout2.animation.Transitions.LINEAR;
 
 import java.util.Set;
 
+import org.caleydo.core.data.collection.EDimension;
 import org.caleydo.core.data.collection.table.Table;
 import org.caleydo.core.data.perspective.table.TablePerspective;
 import org.caleydo.core.data.perspective.variable.Perspective;
@@ -50,7 +51,6 @@ import org.caleydo.core.view.opengl.picking.Pick;
 import org.caleydo.view.crossword.api.model.TablePerspectiveMetaData;
 import org.caleydo.view.crossword.api.model.TypedSet;
 import org.caleydo.view.crossword.api.ui.CrosswordMultiElement;
-import org.caleydo.view.crossword.api.ui.layout.IVertexConnector.EConnectorType;
 import org.caleydo.view.crossword.internal.event.ChangePerspectiveEvent;
 import org.caleydo.view.crossword.internal.ui.dialogs.ChangePerspectiveDialog;
 import org.caleydo.view.crossword.internal.ui.menu.PerspectiveMenuElement;
@@ -60,6 +60,7 @@ import org.caleydo.view.crossword.spi.config.ElementConfig;
 import org.eclipse.swt.SWT;
 
 import com.google.common.base.Predicates;
+import com.google.common.base.Supplier;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 
@@ -212,9 +213,9 @@ public class CrosswordElement extends AnimatedGLElementContainer implements
 	 * @param type
 	 * @return
 	 */
-	public TypedSet getIDs(EConnectorType type) {
+	public TypedSet getIDs(EDimension type) {
 		switch (type) {
-		case COLUMN:
+		case DIMENSION:
 			return dimensionIds;
 		case RECORD:
 			return recordIds;
@@ -231,7 +232,7 @@ public class CrosswordElement extends AnimatedGLElementContainer implements
 	}
 
 	@Override
-	public <T> T getLayoutDataAs(java.lang.Class<T> clazz, T default_) {
+	public <T> T getLayoutDataAs(java.lang.Class<T> clazz, Supplier<? extends T> default_) {
 		T v = get(0).getLayoutDataAs(clazz, null);
 		if (v != null)
 			return v;
@@ -259,6 +260,11 @@ public class CrosswordElement extends AnimatedGLElementContainer implements
 			if (!isToolBar) {
 				border.setColor(border.getColor().brighter());
 				info.setHovered(info.isSelected());
+			}
+			break;
+		case DRAG_DETECTED:
+			if (((isToolBar && !event.isCtrlDown()) || (!isToolBar && event.isCtrlDown())) && !pick.isAnyDragging()) {
+				pick.setDoDragging(true);
 			}
 			break;
 		case CLICKED:
