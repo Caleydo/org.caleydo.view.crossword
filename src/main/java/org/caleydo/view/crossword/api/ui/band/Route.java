@@ -18,10 +18,11 @@ import org.caleydo.core.view.opengl.util.spline.ITesselatedPolygon;
 import org.caleydo.core.view.opengl.util.spline.TesselationRenderer;
 
 import com.google.common.base.Function;
-import com.google.common.collect.DiscreteDomains;
+import com.google.common.collect.ContiguousSet;
+import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Ranges;
+import com.google.common.collect.Range;
 
 /**
  * @author Samuel Gratzl
@@ -96,7 +97,7 @@ public class Route implements ITesselatedPolygon {
 	private Iterable<Vec2f> shiftCurve(final IDoubleFunction radius) {
 		final int last = curve.length - 1;
 		final float distanceFactor = 1.f / distances[last];
-		return Iterables.transform(Ranges.closed(0, last).asSet(DiscreteDomains.integers()),
+		return Iterables.transform(ContiguousSet.create(Range.closed(0, last), DiscreteDomain.integers()),
 				new Function<Integer, Vec2f>() {
 					@Override
 					public Vec2f apply(Integer input) {
