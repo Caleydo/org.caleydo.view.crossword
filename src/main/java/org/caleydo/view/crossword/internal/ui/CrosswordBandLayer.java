@@ -86,7 +86,7 @@ public class CrosswordBandLayer extends GLElement implements MultiSelectionManag
 	private void clear(IBandRenderer route, SelectionType type) {
 		if (route == null)
 			return;
-		SelectionManager manager = selections.getSelectionManager(route.getIds().getIdType());
+		SelectionManager manager = selections.get(route.getIds().getIdType());
 		if (manager == null)
 			return;
 		manager.clearSelection(type);
@@ -164,7 +164,7 @@ public class CrosswordBandLayer extends GLElement implements MultiSelectionManag
 	 * @return
 	 */
 	private SelectionManager getOrCreate(IDType idType) {
-		SelectionManager manager = selections.getSelectionManager(idType);
+		SelectionManager manager = selections.get(idType);
 		if (manager == null) {
 			manager = new SelectionManager(idType);
 			selections.add(manager);
